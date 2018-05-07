@@ -105,7 +105,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void sendmsgtouifrombgthread(View view) {
 
-
         Runnable runnable=new Runnable() {
             @Override
             public void run() {
@@ -123,9 +122,6 @@ public class MainActivity extends AppCompatActivity {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-
-
-
             }
 
 
@@ -133,7 +129,6 @@ public class MainActivity extends AppCompatActivity {
 
         Thread thread=new Thread(runnable);
         thread.start();
-
 
     }
 }
