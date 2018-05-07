@@ -1,7 +1,12 @@
 package com.example.arjun_mu.threadsample;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,17 +19,27 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity {
 
     private static final String MSG_KEY = "MSG_KEY";
-    ScrollView mScrollView;
+    //ScrollView mScrollView;
     TextView mTextView;
 
     Handler myHandler;
     ProgressBar mProgressBar;
 
+    BroadcastReceiver mBroadcastReceiver=new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            String msg=intent.getStringExtra(MyIntentService.messagekey);
+            Toast.makeText(context, ""+msg, Toast.LENGTH_SHORT).show();
+
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mScrollView = (ScrollView) findViewById(R.id.scrollView2);
+      //  mScrollView = (ScrollView) findViewById(R.id.scrollView2);
         mTextView = (TextView) findViewById((R.id.textView));
 
         myHandler=new Handler(getMainLooper()){
@@ -35,6 +50,15 @@ public class MainActivity extends AppCompatActivity {
                 mTextView.append(message);
             }
         };
+
+
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(mBroadcastReceiver,new IntentFilter(MyIntentService.fromservice));
     }
 
     public void runthread(View view) {
@@ -129,6 +153,12 @@ public class MainActivity extends AppCompatActivity {
 
         Thread thread=new Thread(runnable);
         thread.start();
+
+    }
+
+    public void intentservice(View view) {
+
+        MyIntentService.startActionFoo(getApplicationContext(),"val1","val2");
 
     }
 }
